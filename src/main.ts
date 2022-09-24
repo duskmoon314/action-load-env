@@ -1,16 +1,32 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as glob from '@actions/glob'
+import {readFile} from 'fs/promises'
+import dotenv from 'dotenv'
+
+export const parse = async (files: string): Promise<object> => {
+  const globber = await glob.create(files)
+  let result = {}
+  for await (const file of globber.globGenerator()) {
+    core.debug(`Loading ${file}`)
+    const content = await readFile(file)
+    result = {...result, ...dotenv.parse(content)}
+  }
+  return result
+}
+
+const set_env_output = (env: object): void => {
+  for (const [key, value] of Object.entries(env)) {
+    core.info(`Setting ${key}=${value}`)
+    core.exportVariable(key, value)
+    core.setOutput(key, value)
+  }
+}
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const files: string = core.getInput('files')
+    const env_obj = await parse(files)
+    set_env_output(env_obj)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }

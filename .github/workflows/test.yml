@@ -20,5 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./
+        id: load-env
         with:
-          milliseconds: 1000
+          files: |
+            .env.test
+            .env.dev.*
+      - run: echo ${{ steps.load-env.outputs.Answer }}
