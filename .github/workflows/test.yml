@@ -25,4 +25,4 @@ jobs:
           files: |
             .env.test
             .env.dev.*
-      - run: echo ${{ steps.load-env.outputs.Answer }}
+      - run: echo ${{ env.Hello }} ${{ steps.load-env.outputs.Answer }}
