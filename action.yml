@@ -6,6 +6,14 @@ inputs:
     required: true
     description: 'dotenv files'
     default: '.env'
+  env:
+    description: 'set environment variables or not'
+    required: false
+    default: true
+  output:
+    description: 'output environment variables or not'
+    required: false
+    default: true
 runs:
   using: 'node16'
   main: 'dist/index.js'
