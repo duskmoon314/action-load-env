@@ -19,7 +19,7 @@ test('parse .env.test', async () => {
 test('test runs', () => {
   process.env['FILES'] = '.env.test\n.env.dev.*'
   const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
+  const ip = path.join(__dirname, '..', 'dist', 'main.js')
   const options: cp.ExecFileSyncOptions = {
     env: process.env
   }

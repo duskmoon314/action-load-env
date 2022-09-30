@@ -17,8 +17,12 @@ export const parse = async (files: string): Promise<object> => {
 const set_env_output = (env: object): void => {
   for (const [key, value] of Object.entries(env)) {
     core.info(`Setting ${key}=${value}`)
-    core.exportVariable(key, value)
-    core.setOutput(key, value)
+    if (core.getBooleanInput('env')) {
+      core.exportVariable(key, value)
+    }
+    if (core.getBooleanInput('output')) {
+      core.setOutput(key, value)
+    }
   }
 }
 
